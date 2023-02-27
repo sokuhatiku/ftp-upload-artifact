@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {create, UploadOptions} from '@actions/artifact'
+import {create, UploadOptions} from './uploader'
 import {findFilesToUpload} from './search'
 import {getInputs} from './input-helper'
 import {NoFileOptions} from './constants'
@@ -43,7 +43,12 @@ async function run(): Promise<void> {
         )
       }
 
-      const artifactClient = create()
+      const artifactClient = create(
+        inputs.server,
+        inputs.port,
+        inputs.username,
+        inputs.password
+      )
       const options: UploadOptions = {
         continueOnError: false
       }

@@ -22,10 +22,19 @@ export function getInputs(): UploadInputs {
     )
   }
 
+  const server = core.getInput(Inputs.Server)
+  const port = core.getInput(Inputs.Port)
+  const username = core.getInput(Inputs.Username)
+  const password = core.getInput(Inputs.Password)
+
   const inputs = {
     artifactName: name,
     searchPath: path,
-    ifNoFilesFound: noFileBehavior
+    ifNoFilesFound: noFileBehavior,
+    server: server,
+    port: port,
+    username: username,
+    password: password
   } as UploadInputs
 
   const retentionDaysStr = core.getInput(Inputs.RetentionDays)

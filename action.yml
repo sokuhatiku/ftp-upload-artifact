@@ -23,6 +23,15 @@ inputs:
 
       Minimum 1 day.
       Maximum 90 days unless changed from the repository settings page.
+  server:
+    required: true
+  port:
+    required: false
+    default: 21
+  username:
+    required: true
+  password:
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'

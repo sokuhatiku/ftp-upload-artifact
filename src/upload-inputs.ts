@@ -20,4 +20,9 @@ export interface UploadInputs {
    * Duration after which artifact will expire in days
    */
   retentionDays: number
+
+  server: string
+  port: number
+  username: string
+  password: string
 }
