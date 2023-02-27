@@ -47,7 +47,8 @@ async function run(): Promise<void> {
         inputs.server,
         inputs.port,
         inputs.username,
-        inputs.password
+        inputs.password,
+        inputs.remotePath
       )
       const options: UploadOptions = {
         continueOnError: false

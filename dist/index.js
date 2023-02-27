@@ -10984,6 +10984,7 @@ var Inputs;
     Inputs["Port"] = "port";
     Inputs["Username"] = "username";
     Inputs["Password"] = "password";
+    Inputs["RemotePath"] = "remote-path";
 })(Inputs = exports.Inputs || (exports.Inputs = {}));
 var NoFileOptions;
 (function (NoFileOptions) {
@@ -11051,6 +11052,7 @@ function getInputs() {
     const port = Number(core.getInput(constants_1.Inputs.Port));
     const username = core.getInput(constants_1.Inputs.Username);
     const password = core.getInput(constants_1.Inputs.Password);
+    const remotePath = core.getInput(constants_1.Inputs.RemotePath);
     const inputs = {
         artifactName: name,
         searchPath: path,
@@ -11058,7 +11060,8 @@ function getInputs() {
         server: server,
         port: port,
         username: username,
-        password: password
+        password: password,
+        remotePath: remotePath
     };
     const retentionDaysStr = core.getInput(constants_1.Inputs.RetentionDays);
     if (retentionDaysStr) {
@@ -11314,7 +11317,7 @@ function run() {
                 if (searchResult.filesToUpload.length > 10000) {
                     core.warning(`There are over 10,000 files in this artifact, consider creating an archive before upload to improve the upload performance.`);
                 }
-                const artifactClient = (0, uploader_1.create)(inputs.server, inputs.port, inputs.username, inputs.password);
+                const artifactClient = (0, uploader_1.create)(inputs.server, inputs.port, inputs.username, inputs.password, inputs.remotePath);
                 const options = {
                     continueOnError: false
                 };
@@ -11387,11 +11390,12 @@ const core = __importStar(__nccwpck_require__(2186));
 const fs = __importStar(__nccwpck_require__(7147));
 const path = __importStar(__nccwpck_require__(1017));
 class FTPArtifactClient {
-    constructor(host, port, username, password) {
+    constructor(host, port, username, password, remotePath) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
+        this.remotePath = remotePath !== null && remotePath !== void 0 ? remotePath : '/';
     }
     uploadArtifact(artifactName, filesToUpload, rootDirectory, options) {
         var _a;
@@ -11409,7 +11413,7 @@ class FTPArtifactClient {
                     });
                 });
                 let failedItems = [];
-                const basePathInServer = path.join('/', (_a = process.env['GITHUB_RUN_ID']) !== null && _a !== void 0 ? _a : '0', artifactName);
+                const basePathInServer = path.join(this.remotePath, (_a = process.env['GITHUB_RUN_ID']) !== null && _a !== void 0 ? _a : '0', artifactName);
                 for (const absolutePathInClient of filesToUpload) {
                     try {
                         const pathInServer = path
@@ -11466,8 +11470,8 @@ class FTPArtifactClient {
         });
     }
 }
-function create(host, port, username, password) {
-    return new FTPArtifactClient(host, port, username, password);
+function create(host, port, username, password, remotePath) {
+    return new FTPArtifactClient(host, port, username, password, remotePath);
 }
 exports.create = create;
 

@@ -7,7 +7,8 @@ export enum Inputs {
   Server = 'server',
   Port = 'port',
   Username = 'username',
-  Password = 'password'
+  Password = 'password',
+  RemotePath = 'remote-path'
 }
 
 export enum NoFileOptions {

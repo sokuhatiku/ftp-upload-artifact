@@ -8,12 +8,20 @@ class FTPArtifactClient {
   private port: number
   private username: string
   private password: string
+  private remotePath: string
 
-  constructor(host: string, port: number, username: string, password: string) {
+  constructor(
+    host: string,
+    port: number,
+    username: string,
+    password: string,
+    remotePath?: string
+  ) {
     this.host = host
     this.port = port
     this.username = username
     this.password = password
+    this.remotePath = remotePath ?? '/'
   }
 
   async uploadArtifact(
@@ -38,7 +46,7 @@ class FTPArtifactClient {
 
       let failedItems: string[] = []
       const basePathInServer = path.join(
-        '/',
+        this.remotePath,
         process.env['GITHUB_RUN_ID'] ?? '0',
         artifactName
       )
@@ -105,9 +113,10 @@ export function create(
   host: string,
   port: number,
   username: string,
-  password: string
+  password: string,
+  remotePath?: string
 ): FTPArtifactClient {
-  return new FTPArtifactClient(host, port, username, password)
+  return new FTPArtifactClient(host, port, username, password, remotePath)
 }
 
 export interface UploadOptions {

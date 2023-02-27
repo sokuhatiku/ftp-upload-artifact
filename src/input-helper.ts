@@ -26,6 +26,7 @@ export function getInputs(): UploadInputs {
   const port = Number(core.getInput(Inputs.Port))
   const username = core.getInput(Inputs.Username)
   const password = core.getInput(Inputs.Password)
+  const remotePath = core.getInput(Inputs.RemotePath)
 
   const inputs = {
     artifactName: name,
@@ -34,7 +35,8 @@ export function getInputs(): UploadInputs {
     server: server,
     port: port,
     username: username,
-    password: password
+    password: password,
+    remotePath: remotePath
   } as UploadInputs
 
   const retentionDaysStr = core.getInput(Inputs.RetentionDays)

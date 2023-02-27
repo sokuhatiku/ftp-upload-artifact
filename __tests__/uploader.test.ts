@@ -152,4 +152,37 @@ describe('Uploader', () => {
     ).toBe(true)
     expect(fs.existsSync(path.join(artifactRoot, 'path/test2.txt'))).toBe(true)
   })
+
+  test('Set remote base path', async () => {
+    const fileToUpload = `${clientRoot}/test.txt`
+    fs.mkdirSync(path.dirname(fileToUpload), {recursive: true})
+    fs.writeFileSync(fileToUpload, 'testdata')
+
+    const uploader = create(
+      serverAddr,
+      serverPort,
+      'anonymous',
+      'anonymous',
+      'baseDirectory'
+    )
+    const artifactName = 'TestArtifact'
+
+    const response = await uploader.uploadArtifact(
+      artifactName,
+      [path.resolve(fileToUpload)],
+      path.resolve(clientRoot),
+      {} as UploadOptions
+    )
+
+    expect(response.artifactName).toBe(artifactName)
+    expect(response.failedItems).toEqual([])
+    const artifactRoot = path.join(
+      serverRoot,
+      'baseDirectory',
+      process.env['GITHUB_RUN_ID'] ?? '0',
+      artifactName
+    )
+
+    expect(fs.existsSync(path.join(artifactRoot, 'test.txt'))).toBe(true)
+  })
 })

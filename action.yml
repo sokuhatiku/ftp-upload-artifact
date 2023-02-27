@@ -32,6 +32,9 @@ inputs:
     required: true
   password:
     required: true
+  remote-path:
+    required: false
+    default: /
 runs:
   using: 'node16'
   main: 'dist/index.js'
