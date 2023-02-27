@@ -11412,10 +11412,13 @@ class FTPArtifactClient {
                 const basePathInServer = path.join('/', (_a = process.env['GITHUB_RUN_ID']) !== null && _a !== void 0 ? _a : '0', artifactName);
                 for (const absolutePathInClient of filesToUpload) {
                     try {
-                        const pathInServer = path.join(basePathInServer, path.relative(rootDirectory, absolutePathInClient));
+                        const pathInServer = path
+                            .join(basePathInServer, path.relative(rootDirectory, absolutePathInClient))
+                            .replace(/\\/g, '/');
                         console.log(`Make directory for ${path.dirname(pathInServer)}...`);
                         yield new Promise((resolve, reject) => {
-                            ftpClient.mkdir(path.dirname(pathInServer), true, err => {
+                            const directory = path.dirname(pathInServer).replace(/\\/g, '/');
+                            ftpClient.mkdir(directory, true, err => {
                                 if (err) {
                                     reject(err);
                                 }
