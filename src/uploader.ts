@@ -45,14 +45,17 @@ class FTPArtifactClient {
 
       for (const absolutePathInClient of filesToUpload) {
         try {
-          const pathInServer = path.join(
-            basePathInServer,
-            path.relative(rootDirectory, absolutePathInClient)
-          )
+          const pathInServer = path
+            .join(
+              basePathInServer,
+              path.relative(rootDirectory, absolutePathInClient)
+            )
+            .replace(/\\/g, '/')
 
           console.log(`Make directory for ${path.dirname(pathInServer)}...`)
           await new Promise<void>((resolve, reject) => {
-            ftpClient.mkdir(path.dirname(pathInServer), true, err => {
+            const directory = path.dirname(pathInServer).replace(/\\/g, '/')
+            ftpClient.mkdir(directory, true, err => {
               if (err) {
                 reject(err)
               } else {
