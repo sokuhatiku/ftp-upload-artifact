@@ -62,7 +62,7 @@ describe('Uploader', () => {
       return resolve({root: serverRoot})
     })
 
-    server.listen()
+    await server.listen()
 
     await waitForPortToOpen(serverAddr, serverPort, 10000)
   }, 10000)
@@ -72,8 +72,8 @@ describe('Uploader', () => {
     fs.rmSync(serverRoot + '/*', {force: true, recursive: true})
   })
 
-  afterAll(() => {
-    server.close()
+  afterAll(async () => {
+    await server.close()
     fs.rmSync(testRoot, {force: true, recursive: true})
   })
 
