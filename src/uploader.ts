@@ -4,21 +4,16 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 class FTPArtifactClient {
-  private ftpClient: FTPClient
-  private connecting: Promise<void>
+  private host: string
+  private port: number
+  private username: string
+  private password: string
 
   constructor(host: string, port: number, username: string, password: string) {
-    this.ftpClient = new FTPClient()
-    this.ftpClient.connect({
-      host: host,
-      port: port,
-      user: username,
-      password: password
-    })
-    this.connecting = new Promise<void>((resolve, reject) => {
-      this.ftpClient.once('ready', resolve)
-      this.ftpClient.once('error', reject)
-    })
+    this.host = host
+    this.port = port
+    this.username = username
+    this.password = password
   }
 
   async uploadArtifact(
@@ -27,38 +22,37 @@ class FTPArtifactClient {
     rootDirectory: string,
     options: UploadOptions
   ): Promise<UploadResponse> {
-    await this.connecting
+    const ftpClient = new FTPClient()
 
-    let failedItems: string[] = []
-    const basePathInServer = path.join(
-      '/',
-      process.env['GITHUB_RUN_ID'] ?? '0',
-      artifactName
-    )
-
-    for (const absolutePathInClient of filesToUpload) {
-      try {
-        const pathInServer = path.join(
-          basePathInServer,
-          path.relative(rootDirectory, absolutePathInClient)
-        )
-
-        console.log(`Make directory for ${path.dirname(pathInServer)}...`)
-        await new Promise<void>((resolve, reject) => {
-          this.ftpClient.mkdir(path.dirname(pathInServer), true, err => {
-            if (err) {
-              reject(err)
-            } else {
-              resolve()
-            }
-          })
+    try {
+      await new Promise<void>((resolve, reject) => {
+        ftpClient.once('ready', resolve)
+        ftpClient.once('error', reject)
+        ftpClient.connect({
+          host: this.host,
+          port: this.port,
+          user: this.username,
+          password: this.password
         })
+      })
 
-        const stream = fs.createReadStream(absolutePathInClient)
+      let failedItems: string[] = []
+      const basePathInServer = path.join(
+        '/',
+        process.env['GITHUB_RUN_ID'] ?? '0',
+        artifactName
+      )
+
+      for (const absolutePathInClient of filesToUpload) {
         try {
-          console.log(`Uploading ${absolutePathInClient} to ${pathInServer}...`)
+          const pathInServer = path.join(
+            basePathInServer,
+            path.relative(rootDirectory, absolutePathInClient)
+          )
+
+          console.log(`Make directory for ${path.dirname(pathInServer)}...`)
           await new Promise<void>((resolve, reject) => {
-            this.ftpClient.put(stream, pathInServer, err => {
+            ftpClient.mkdir(path.dirname(pathInServer), true, err => {
               if (err) {
                 reject(err)
               } else {
@@ -66,23 +60,41 @@ class FTPArtifactClient {
               }
             })
           })
-        } finally {
-          stream.destroy()
-        }
-      } catch (err: any) {
-        failedItems.push(absolutePathInClient)
-        if (options.continueOnError) {
-          core.warning(err)
-        } else {
-          throw err
+
+          const stream = fs.createReadStream(absolutePathInClient)
+          try {
+            console.log(
+              `Uploading ${absolutePathInClient} to ${pathInServer}...`
+            )
+            await new Promise<void>((resolve, reject) => {
+              ftpClient.put(stream, pathInServer, err => {
+                if (err) {
+                  reject(err)
+                } else {
+                  resolve()
+                }
+              })
+            })
+          } finally {
+            stream.destroy()
+          }
+        } catch (err: any) {
+          failedItems.push(absolutePathInClient)
+          if (options.continueOnError) {
+            core.warning(err)
+          } else {
+            throw err
+          }
         }
       }
-    }
 
-    return {
-      failedItems: [],
-      artifactName: artifactName
-    } as UploadResponse
+      return {
+        failedItems: [],
+        artifactName: artifactName
+      } as UploadResponse
+    } finally {
+      ftpClient.end()
+    }
   }
 }
 

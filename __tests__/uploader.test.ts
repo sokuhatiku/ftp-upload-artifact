@@ -110,9 +110,10 @@ describe('Uploader', () => {
   }, 10000)
 
   test('Upload Artifact', async () => {
-    const uploader = create(serverAddr, serverPort, 'user', 'password')
+    const uploader = create(serverAddr, serverPort, 'anonymous', 'anonymous')
 
-    const fileToUpload = `${clientRoot}/test.txt`
+    const fileToUpload = `${clientRoot}/path/to/dictionary/test.txt`
+    fs.mkdirSync(path.dirname(fileToUpload), {recursive: true})
     fs.writeFileSync(fileToUpload, 'testdata')
 
     const artifactName = 'TestArtifact'
@@ -132,6 +133,9 @@ describe('Uploader', () => {
           serverRoot,
           process.env['GITHUB_RUN_ID'] ?? '0',
           artifactName,
+          'path',
+          'to',
+          'dictionary',
           'test.txt'
         )
       )
