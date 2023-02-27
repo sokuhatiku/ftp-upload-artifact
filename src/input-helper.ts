@@ -23,7 +23,7 @@ export function getInputs(): UploadInputs {
   }
 
   const server = core.getInput(Inputs.Server)
-  const port = core.getInput(Inputs.Port)
+  const port = Number(core.getInput(Inputs.Port))
   const username = core.getInput(Inputs.Username)
   const password = core.getInput(Inputs.Password)
 
