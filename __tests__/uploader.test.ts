@@ -110,35 +110,46 @@ describe('Uploader', () => {
   }, 10000)
 
   test('Upload Artifact', async () => {
-    const uploader = create(serverAddr, serverPort, 'anonymous', 'anonymous')
-
-    const fileToUpload = `${clientRoot}/path/to/dictionary/test.txt`
+    // Create test files
+    const fileToUpload = `${clientRoot}/path/to/directory/test.txt`
     fs.mkdirSync(path.dirname(fileToUpload), {recursive: true})
     fs.writeFileSync(fileToUpload, 'testdata')
+    const fileToUpload2 = `${clientRoot}/path/test2.txt`
+    fs.writeFileSync(fileToUpload2, 'testdata2')
+    /*
+    File Structure:
+    root/
+      path/
+        to/
+          directory/
+            test.txt
+        test2.txt
+    */
 
+    // Upload
+    const uploader = create(serverAddr, serverPort, 'anonymous', 'anonymous')
     const artifactName = 'TestArtifact'
 
     const response = await uploader.uploadArtifact(
       artifactName,
-      [path.resolve(fileToUpload)],
+      [path.resolve(fileToUpload), path.resolve(fileToUpload2)],
       path.resolve(clientRoot),
       {} as UploadOptions
     )
 
+    // Check
     expect(response.artifactName).toBe(artifactName)
     expect(response.failedItems).toEqual([])
+
+    const artifactRoot = path.join(
+      serverRoot,
+      process.env['GITHUB_RUN_ID'] ?? '0',
+      artifactName
+    )
+
     expect(
-      fs.existsSync(
-        path.join(
-          serverRoot,
-          process.env['GITHUB_RUN_ID'] ?? '0',
-          artifactName,
-          'path',
-          'to',
-          'dictionary',
-          'test.txt'
-        )
-      )
+      fs.existsSync(path.join(artifactRoot, 'path/to/directory/test.txt'))
     ).toBe(true)
+    expect(fs.existsSync(path.join(artifactRoot, 'path/test2.txt'))).toBe(true)
   })
 })
