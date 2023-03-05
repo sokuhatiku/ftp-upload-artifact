@@ -41,7 +41,7 @@ inputs:
   secure:
     description: 'Use ftps protocol.'
     required: false
-    default: 'false'
+    default: 'true'
   remote-path:
     description: >
       Remote root directory to store artifacts. Defaults to root directory if not provided.
