@@ -10980,10 +10980,11 @@ var Inputs;
     Inputs["Path"] = "path";
     Inputs["IfNoFilesFound"] = "if-no-files-found";
     Inputs["RetentionDays"] = "retention-days";
-    Inputs["Server"] = "server";
+    Inputs["Host"] = "host";
     Inputs["Port"] = "port";
     Inputs["Username"] = "username";
     Inputs["Password"] = "password";
+    Inputs["Secure"] = "secure";
     Inputs["RemotePath"] = "remote-path";
 })(Inputs = exports.Inputs || (exports.Inputs = {}));
 var NoFileOptions;
@@ -11048,19 +11049,21 @@ function getInputs() {
     if (!noFileBehavior) {
         core.setFailed(`Unrecognized ${constants_1.Inputs.IfNoFilesFound} input. Provided: ${ifNoFilesFound}. Available options: ${Object.keys(constants_1.NoFileOptions)}`);
     }
-    const server = core.getInput(constants_1.Inputs.Server);
+    const host = core.getInput(constants_1.Inputs.Host);
     const port = Number(core.getInput(constants_1.Inputs.Port));
     const username = core.getInput(constants_1.Inputs.Username);
     const password = core.getInput(constants_1.Inputs.Password);
+    const secure = Boolean(core.getInput(constants_1.Inputs.Secure));
     const remotePath = core.getInput(constants_1.Inputs.RemotePath);
     const inputs = {
         artifactName: name,
         searchPath: path,
         ifNoFilesFound: noFileBehavior,
-        server: server,
+        host: host,
         port: port,
         username: username,
         password: password,
+        secure: secure,
         remotePath: remotePath
     };
     const retentionDaysStr = core.getInput(constants_1.Inputs.RetentionDays);
@@ -11317,7 +11320,7 @@ function run() {
                 if (searchResult.filesToUpload.length > 10000) {
                     core.warning(`There are over 10,000 files in this artifact, consider creating an archive before upload to improve the upload performance.`);
                 }
-                const artifactClient = (0, uploader_1.create)(inputs.server, inputs.port, inputs.username, inputs.password, inputs.remotePath);
+                const artifactClient = (0, uploader_1.create)(inputs.host, inputs.port, inputs.username, inputs.password, inputs.secure, inputs.remotePath);
                 const options = {
                     continueOnError: false
                 };
@@ -11390,11 +11393,12 @@ const core = __importStar(__nccwpck_require__(2186));
 const fs = __importStar(__nccwpck_require__(7147));
 const path = __importStar(__nccwpck_require__(1017));
 class FTPArtifactClient {
-    constructor(host, port, username, password, remotePath) {
+    constructor(host, port, username, password, secure, remotePath) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
+        this.secure = secure;
         this.remotePath = remotePath !== null && remotePath !== void 0 ? remotePath : '/';
     }
     uploadArtifact(artifactName, filesToUpload, rootDirectory, options) {
@@ -11409,7 +11413,8 @@ class FTPArtifactClient {
                         host: this.host,
                         port: this.port,
                         user: this.username,
-                        password: this.password
+                        password: this.password,
+                        secure: this.secure
                     });
                 });
                 let failedItems = [];
@@ -11470,8 +11475,8 @@ class FTPArtifactClient {
         });
     }
 }
-function create(host, port, username, password, remotePath) {
-    return new FTPArtifactClient(host, port, username, password, remotePath);
+function create(host, port, username, password, secure, remotePath) {
+    return new FTPArtifactClient(host, port, username, password, secure, remotePath);
 }
 exports.create = create;
 
