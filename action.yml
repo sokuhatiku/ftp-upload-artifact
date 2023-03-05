@@ -1,6 +1,9 @@
 name: 'Upload a Build Artifact via FTP(S) Protocol'
 description: 'Upload a build artifact that can be used by subsequent workflow steps'
 author: 'Sokuhatiku'
+branding:
+  icon: 'upload'
+  color: 'green'
 inputs: 
   name:
     description: 'Artifact name'
