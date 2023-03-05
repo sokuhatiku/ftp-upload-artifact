@@ -127,7 +127,13 @@ describe('Uploader', () => {
     */
 
     // Upload
-    const uploader = create(serverAddr, serverPort, 'anonymous', 'anonymous')
+    const uploader = create(
+      serverAddr,
+      serverPort,
+      'anonymous',
+      'anonymous',
+      false
+    )
     const artifactName = 'TestArtifact'
 
     const response = await uploader.uploadArtifact(
@@ -163,6 +169,7 @@ describe('Uploader', () => {
       serverPort,
       'anonymous',
       'anonymous',
+      false,
       'baseDirectory'
     )
     const artifactName = 'TestArtifact'
