@@ -4,7 +4,7 @@ export enum Inputs {
   Path = 'path',
   IfNoFilesFound = 'if-no-files-found',
   RetentionDays = 'retention-days',
-  Server = 'server',
+  Host = 'host',
   Port = 'port',
   Username = 'username',
   Password = 'password',

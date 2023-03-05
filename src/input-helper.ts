@@ -22,7 +22,7 @@ export function getInputs(): UploadInputs {
     )
   }
 
-  const server = core.getInput(Inputs.Server)
+  const host = core.getInput(Inputs.Host)
   const port = Number(core.getInput(Inputs.Port))
   const username = core.getInput(Inputs.Username)
   const password = core.getInput(Inputs.Password)
@@ -32,7 +32,7 @@ export function getInputs(): UploadInputs {
     artifactName: name,
     searchPath: path,
     ifNoFilesFound: noFileBehavior,
-    server: server,
+    host: host,
     port: port,
     username: username,
     password: password,

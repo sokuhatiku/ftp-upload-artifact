@@ -21,7 +21,7 @@ export interface UploadInputs {
    */
   retentionDays: number
 
-  server: string
+  host: string
   port: number
   username: string
   password: string

@@ -44,7 +44,7 @@ async function run(): Promise<void> {
       }
 
       const artifactClient = create(
-        inputs.server,
+        inputs.host,
         inputs.port,
         inputs.username,
         inputs.password,
