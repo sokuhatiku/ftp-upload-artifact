@@ -8,6 +8,7 @@ class FTPArtifactClient {
   private port: number
   private username: string
   private password: string
+  private secure: boolean
   private remotePath: string
 
   constructor(
@@ -15,12 +16,14 @@ class FTPArtifactClient {
     port: number,
     username: string,
     password: string,
+    secure: boolean,
     remotePath?: string
   ) {
     this.host = host
     this.port = port
     this.username = username
     this.password = password
+    this.secure = secure
     this.remotePath = remotePath ?? '/'
   }
 
@@ -40,7 +43,8 @@ class FTPArtifactClient {
           host: this.host,
           port: this.port,
           user: this.username,
-          password: this.password
+          password: this.password,
+          secure: this.secure
         })
       })
 
@@ -114,9 +118,10 @@ export function create(
   port: number,
   username: string,
   password: string,
+  secure: boolean,
   remotePath?: string
 ): FTPArtifactClient {
-  return new FTPArtifactClient(host, port, username, password, remotePath)
+  return new FTPArtifactClient(host, port, username, password, secure, remotePath)
 }
 
 export interface UploadOptions {

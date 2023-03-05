@@ -25,5 +25,6 @@ export interface UploadInputs {
   port: number
   username: string
   password: string
+  secure: boolean
   remotePath: string
 }

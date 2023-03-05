@@ -34,6 +34,9 @@ inputs:
   password:
     required: false
     default: anonymous
+  secure:
+    required: false
+    default: false
   remote-path:
     required: false
     default: /

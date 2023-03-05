@@ -48,6 +48,7 @@ async function run(): Promise<void> {
         inputs.port,
         inputs.username,
         inputs.password,
+        inputs.secure,
         inputs.remotePath
       )
       const options: UploadOptions = {
