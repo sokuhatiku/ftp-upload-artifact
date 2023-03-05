@@ -1,6 +1,6 @@
-name: 'Upload a Build Artifact'
+name: 'Upload a Build Artifact via FTP(S) Protocol'
 description: 'Upload a build artifact that can be used by subsequent workflow steps'
-author: 'GitHub'
+author: 'Sokuhatiku'
 inputs: 
   name:
     description: 'Artifact name'
