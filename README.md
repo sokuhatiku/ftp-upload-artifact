@@ -1,4 +1,25 @@
-# Upload-Artifact v3
+# FTP-Upload-Artifact
+
+FTP Upload Artifact is based on [upload-artifact](https://github.com/actions/upload-artifact) for GitHub Actions. It uploads artifacts to FTP server. 
+
+See also [ftp-download-artifact](https://github.com/sokuhatiku/ftp-download-artifact).
+
+# Additional Inputs
+
+```yaml
+- uses: actions/upload-artifact@v3
+  with:
+    name: my-artifact
+    path: path/to/artifact/world.txt
+    host: ftp-server.example.com
+    port: 21
+    username: ${{ secrets.FTP_USERNAME }}
+    password: ${{ secrets.FTP_PASSWORD }}
+    secure: false
+    remote-path: /path/to/artifact/stored
+```
+
+----
 
 This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
 
