@@ -19,6 +19,16 @@ See also [ftp-download-artifact](https://github.com/sokuhatiku/ftp-download-arti
     remote-path: /path/to/artifact/stored
 ```
 
+Artifacts uploaded with the above settings will be stored in the following location of server:
+
+```
+/<ftp-user-root>
+  path/to/artifact/stored
+    <run-id>
+      my-artifact
+        world.txt
+```
+
 ----
 
 This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
