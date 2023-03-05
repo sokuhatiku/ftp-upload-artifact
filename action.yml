@@ -24,20 +24,30 @@ inputs:
       Minimum 1 day.
       Maximum 90 days unless changed from the repository settings page.
   host:
+    description: 'FTP server host'
     required: true
   port:
+    description: 'FTP server port'
     required: false
-    default: 21
+    default: '21'
   username:
+    description: 'Username for FTP access. Defaults to anonymous if not provided'
     required: false
     default: anonymous
   password:
+    description: 'Password for FTP access. Defaults to anonymous if not provided'
     required: false
     default: anonymous
   secure:
+    description: 'Use ftps protocol.'
     required: false
-    default: false
+    default: 'false'
   remote-path:
+    description: >
+      Remote root directory to store artifacts. Defaults to root directory if not provided.
+      If the path does not exist, it will be created.
+
+      If possible, change the server-side user home directory instead of using this option.
     required: false
     default: /
 runs:
