@@ -29,9 +29,11 @@ inputs:
     required: false
     default: 21
   username:
-    required: true
+    required: false
+    default: anonymous
   password:
-    required: true
+    required: false
+    default: anonymous
   remote-path:
     required: false
     default: /
