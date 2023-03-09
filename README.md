@@ -7,7 +7,7 @@ See also [ftp-download-artifact](https://github.com/sokuhatiku/ftp-download-arti
 # Additional Inputs
 
 ```yaml
-- uses: actions/upload-artifact@v3
+- uses: sokuhatiku/ftp-upload-artifact@v1
   with:
     name: my-artifact
     path: path/to/artifact/world.txt
